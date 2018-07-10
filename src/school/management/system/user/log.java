@@ -6,19 +6,27 @@
 package school.management.system.user;
 
 import java.awt.Color;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
+import school.management.system.admin.dbConfig;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Beamtech
  */
 public class log extends javax.swing.JFrame {
- String daytime_night,Hour,second,Minute;
+ String daytime_night,Hour,second,Minute,username,pass;
     /**
      * Creates new form log
+     *
      */
+  dbConfig db= new dbConfig();
     public log() {
         initComponents();
         dateTime();
@@ -236,7 +244,24 @@ public class log extends javax.swing.JFrame {
     private void loginCmdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginCmdActionPerformed
 //      usernameJtxt 
 //      jPassword
- 
+        
+        username=usernameJtxt.getText().trim();
+        pass=jPassword.getText().trim();
+        JOptionPane.showMessageDialog(null, username);
+        JOptionPane.showMessageDialog(null, pass);
+        // sending data to the database.
+        int slash= username.indexOf("/");
+         JOptionPane.showMessageDialog(null,slash);
+         JOptionPane.showMessageDialog(null,username.substring(0,slash));
+        if(username.substring(0,slash).contains("CI")){
+            
+         login("student");
+          JOptionPane.showMessageDialog(null, "login Successful");
+                 }else
+        {
+                 JOptionPane.showMessageDialog(null, "login unSuccessful");
+                }
+                
     }//GEN-LAST:event_loginCmdActionPerformed
 
     /**
@@ -338,6 +363,19 @@ public class log extends javax.swing.JFrame {
           }  
         }.start();
     
+    }
+    public void login(String table){
+        JOptionPane.showMessageDialog(null,table);
+         try {   
+     String sql = "SELECT * FROM "+table.trim()+" WHERE Username=? and password=? ";
+        
+         PreparedStatement pst= db.con.prepareStatement(sql);
+         pst.setString(1,username);
+         pst.setString(2,pass);
+         pst.execute();
+     } catch (SQLException ex) {
+         JOptionPane.showMessageDialog(null,ex);
+     }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
